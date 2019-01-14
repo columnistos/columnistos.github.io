@@ -1,6 +1,6 @@
 # El proyecto
 
-[@columnistOS] es una idea de [@rusosnith](https://twitter.com/rusosnith), programado originalmente por [@j_e_d](https://twitter.com/j_e_d) y mejorado por varios [COLLABORATORS.md]
+[@columnistOS] es una idea de [@rusosnith](https://twitter.com/rusosnith), programado originalmente por [@j_e_d](https://twitter.com/j_e_d) y mejorado por varios [colaboradores]
 
 El código está disponible en [columnistos].
 
@@ -19,4 +19,4 @@ Paraguay: [@TEDICpy](https://twitter.com/TEDICpy).
 
 [@columnistos]: https://twitter.com/columnistos
 [columnistos]: https://github.com/columnistos/columnistos
-[COLLABORATORS.md]: https://github.com/columnistos/columnistos/COLLABORATORS.md
+[colaboradores]: https://github.com/columnistos/columnistos/blob/master/COLLABORATORS.md
