@@ -6,7 +6,7 @@ El código está disponible en [github/columnistos].
 
 ## Bots:
 
-Argentina:[@columnistOS]
+Argentina: [@columnistOS].
 
 Chile: [@columnistas_cl](https://twitter.com/columnistas_cl).
 
