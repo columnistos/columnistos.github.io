@@ -1,8 +1,8 @@
 # El proyecto
 
-[@columnistOS] es una idea de [@rusosnith](https://twitter.com/rusosnith), programado originalmente por [@j_e_d](https://twitter.com/j_e_d) y mejorado por varios [colaboradores]
+[@columnistOS] es una idea de [@rusosnith](https://twitter.com/rusosnith), programado originalmente por [@j_e_d](https://twitter.com/j_e_d) y mejorado por varios [colaboradores].
 
-El código está disponible en [columnistos].
+El código está disponible en [github/columnistos].
 
 ## Bots:
 
@@ -18,5 +18,5 @@ Paraguay: [@TEDICpy](https://twitter.com/TEDICpy).
 
 
 [@columnistos]: https://twitter.com/columnistos
-[columnistos]: https://github.com/columnistos/columnistos
+[github/columnistos]: https://github.com/columnistos/columnistos
 [colaboradores]: https://github.com/columnistos/columnistos/blob/master/COLLABORATORS.md
