@@ -4,6 +4,8 @@
 
 El código está disponible en [github/columnistos].
 
+Hay un [dump] de los datos disponible.
+
 ## Bots:
 
 Argentina: [@columnistOS].
@@ -19,4 +21,5 @@ Paraguay: [@TEDICpy](https://twitter.com/TEDICpy).
 
 [@columnistos]: https://twitter.com/columnistos
 [github/columnistos]: https://github.com/columnistos/columnistos
+[dump]: https://github.com/columnistos/dump
 [colaboradores]: https://github.com/columnistos/columnistos/blob/master/COLLABORATORS.md
