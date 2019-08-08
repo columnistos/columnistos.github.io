@@ -22,11 +22,22 @@
 }
 </style>
 <body>
-
-<div id="calendar"></div>
+<div id="container">
+  Notas de opinión firmadas por mujeres por día entre <span id=mesDesde></span> y <span id=mesHasta></span>
+  <div id="calendar"></div>
+</div>
 
 <script src="../js/d3.v4.min.js"></script>
 <script>
+
+
+// carga los datos
+  d3.queue()
+    .defer(d3.csv, "Autores-03-2019.csv")
+    .defer(d3.csv, "Notas-03-2019.csv")
+    .awaitAll(drawCalendar);
+
+
 
 function drawCalendar(error, results){ // results[0] = autores // results[1] = notas
 
@@ -40,24 +51,47 @@ function drawCalendar(error, results){ // results[0] = autores // results[1] = n
   var minDate = new Date("2018-01-01");
   var maxDate = new Date("2018-12-31");
 
+  console.log(minDate);
+
+  var cellMargin = 1,
+      cornerRadius = 0,
+      cellSize = 20
+      horizontal = 0
+      separaFindes = 0; // cantidad de pixeles que se usan para separar el finde de la semana
+
+  d3.timeFormatDefaultLocale({
+     "decimal": ".",
+    "thousands": ",",
+    "grouping": [3],
+    "currency": ["$", ""],
+    "dateTime": "%a %b %e %X %Y",
+    "date": "%m/%d/%Y",
+    "time": "%H:%M:%S",
+    "periods": ["AM", "PM"],
+    "days": ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado"],
+    "shortDays": ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+    "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+  });
 
 
-  var cellMargin = 2,
-      cellSize = 20;
-
-  var day = d3.timeFormat("%w"),
-      week = d3.timeFormat("%U"),
+  var day = function (d) { return (d.getDay() + 6) % 7; }, // monday = 0 d3.timeFormat("%w"),
+      week = d3.timeFormat("%W"),
       format = d3.timeFormat("%Y-%m-%d"),
       year = d3.timeFormat("%Y"),
-      titleFormat = d3.utcFormat("%a, %d-%b (%Y)");
+      titleFormat = d3.utcFormat("%a %d/%b (%Y)");
       monthName = d3.timeFormat("%B"),
       porcentaje = d3.format(".0%"),
       months= d3.timeMonth.range(minDate, maxDate);
 
+  d3.select("#mesDesde").html(monthName(minDate) + (year(minDate)== year(maxDate)? "": " de " + year(minDate)));
+  d3.select("#mesHasta").html(monthName(maxDate) + " de " + year(maxDate));
+
+
 
   var colorScale = d3.scaleThreshold()
     .domain([0.001,0.15,0.3,0.45,1])
-    .range(['#787878', '#c4c4c4','#d6b8c7', '#cf80a6', '#d8358a']);
+    .range(['#fafafa', '#c4c4c4','#d6b8c7', '#cf80a6', '#d8358a']);
     
       
       // prpara la data y cuenta por mes
@@ -90,36 +124,62 @@ function drawCalendar(error, results){ // results[0] = autores // results[1] = n
     .data(months)
     .enter().append("svg")
     .attr("class", "month")
-    .attr("height", ((cellSize * 7) + (cellMargin * 8) + 20) ) // the 20 is for the month labels
-    .attr("width", function(d) {
-      var columns = weeksInMonth(d);
-      return ((cellSize * columns) + (cellMargin * (columns + 1)));
-    })
-    .append("g")
+    .append("g");
+
+
+  if(horizontal){
+      d3.selectAll(".month")
+      .attr("height", ((cellSize * 7) + (cellMargin * 8) + 20)) // the 20 is for the month labels
+      .attr("width", function (d) {
+        var columns = weeksInMonth(d);
+        return ((cellSize * columns) + (cellMargin * (columns + 1)));
+      });
+    }else{
+       d3.selectAll(".month")
+          .attr("width", ((cellSize * 7) + (cellMargin * (8+separaFindes)))) 
+          .attr("height", (cellSize * 6) + (cellMargin * 7)+20 ); // the 20 is for the month labels
+          
+    }
+
 
   // agrega el nombre del mes
 
-  svg.append("text")
+  var labels =  svg.append("text")
     .attr("class", "month-name")
-    .attr("y", (cellSize * 7) + (cellMargin * 8) + 15 )
-    .attr("x", function(d) {
-      var columns = weeksInMonth(d);
-      return (((cellSize * columns) + (cellMargin * (columns + 1))) / 2);
-    })
     .attr("text-anchor", "middle")
     .text(function(d) { return monthName(d); })
 
-    //crea los días
+  if (horizontal) {
+     labels
+      .attr("y", (cellSize * 7) + (cellMargin * 8) + 15)
+      .attr("x", function (d) {
+        var columns = weeksInMonth(d);
+        return (((cellSize * columns) + (cellMargin * (columns + 1))) / 2);
+      })
+  } else {
+     labels
+      .attr("x", ((cellSize * 7) + (cellMargin * (8 + separaFindes)))/2)
+      .attr("y", (cellSize * 5) + (cellMargin * 6) + 15)
+  }
+
+     //crea los días
   var rect = svg.selectAll("rect.day")
     .data(function(d, i) { return d3.timeDays(d, new Date(d.getFullYear(), d.getMonth()+1, 1)); })
     .enter().append("rect")
     .attr("class", "day")
     .attr("width", cellSize)
     .attr("height", cellSize)
-    .attr("rx", 3).attr("ry", 3) // rounded corners
+    .attr("rx", cornerRadius).attr("ry", cornerRadius) // rounded corners
     .attr("fill", '#eaeaea') // default light grey fill
-    .attr("y", function(d) { return (day(d) * cellSize) + (day(d) * cellMargin) + cellMargin; })
-    .attr("x", function(d) { return ((week(d) - week(new Date(d.getFullYear(),d.getMonth(),1))) * cellSize) + ((week(d) - week(new Date(d.getFullYear(),d.getMonth(),1))) * cellMargin) + cellMargin ; })
+    .attr("y", function(d) { 
+      if(horizontal) return (day(d) * cellSize) + (day(d) * cellMargin) + cellMargin;
+      return ((week(d) - week(new Date(d.getFullYear(), d.getMonth(), 1))) * cellSize) + ((week(d) - week(new Date(d.getFullYear(), d.getMonth(), 1))) * cellMargin) + cellMargin;  
+       })
+    .attr("x", function(d) {
+      var extra = day(d) > 4 ? separaFindes:0;
+      if (horizontal) return ((week(d) - week(new Date(d.getFullYear(),d.getMonth(),1))) * cellSize) + ((week(d) - week(new Date(d.getFullYear(),d.getMonth(),1))) * cellMargin) + cellMargin; 
+      return (day(d) * cellSize) + (day(d) * cellMargin) + cellMargin + extra;
+      })
     .on("mouseover", function(d) {
       d3.select(this).classed('hover', true);
     })
@@ -143,11 +203,6 @@ function drawCalendar(error, results){ // results[0] = autores // results[1] = n
         return titleFormat(new Date(d)) + ":  S/d" });
 
 }
-
-d3.queue()
-    .defer(d3.csv, "Autores-03-2019.csv")
-    .defer(d3.csv, "Notas-03-2019.csv")
-    .awaitAll(drawCalendar);
 
 
 </script>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My first Vue app</title>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        Columnistos tiene varias instancias, como <a v-for="todo in todos" href="#">{{ todo.text }},</a>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                todos: [
+                    { text: 'Argentina'},
+                    { text: 'Colombia'},
+                    { text: 'Paraguay'}
+                ]
+            }
+        })
+    </script>
+</body>
+
+</html>
