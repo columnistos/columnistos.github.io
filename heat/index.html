@@ -33,8 +33,8 @@
 
 // carga los datos
   d3.queue()
-    .defer(d3.csv, "Autores-03-2019.csv")
-    .defer(d3.csv, "Notas-03-2019.csv")
+    .defer(d3.csv, "Autores.csv")
+    .defer(d3.csv, "Notas.csv")
     .awaitAll(drawCalendar);
 
 
@@ -48,8 +48,8 @@ function drawCalendar(error, results){ // results[0] = autores // results[1] = n
 
   //var minDate = d3.min(results[1], function(d) { return new Date(d.added.substring(0, 10)) })
   //var maxDate = d3.max(results[1], function(d) { return new Date(d.added.substring(0, 10)) })
-  var minDate = new Date("2018-01-01");
-  var maxDate = new Date("2018-12-31");
+  var minDate = new Date("2017-12-20");
+  var maxDate = new Date("2019-12-20");
 
   console.log(minDate);
 
